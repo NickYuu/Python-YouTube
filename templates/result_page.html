@@ -1,0 +1,73 @@
+{% extends "base.html"%}
+{% block content %}
+<p>{{current_page}}</p>
+<div class="card-block">
+    <h1 style="width: 10rem; margin:0px auto;">{{search}}</h1>
+</div>
+{% for item in all_item %}
+{% if "{{item['img']}}" != '' %}
+<div class="card" style="width: 30rem; margin:20px auto;">
+    <div class="card-block">
+        <a href="{{item['link']}}" target="_blank">
+            <h5 class="card-title">{{item['title']}}</h5>
+        </a>
+        <a href="{{item['link']}}" target="_blank">
+            <img class="card-img-top" src="{{item['img']}}" alt="Card image cap" width="437" height="243">
+        </a>
+        <p class="card-text">
+            <small class="text-muted">{{item['time']}}</small>
+        </p>
+        <form action="/download" target="_blank">
+            <button type="submit" class="btn btn-outline-warning" name="value" value="MP3&{{item['link']}}">MP3</button>
+            <button type="submit" class="btn btn-outline-danger" name="value" value="MP4&{{item['link']}}">MP4</button>
+        </form>
+        <form action="/favorite" method="post">
+            <input type="hidden" name="url" value="{{url}}">
+            <input type="hidden" name="title" value="{{item['title']}}">
+            <input type="hidden" name="link" value="{{item['link']}}">
+            <input type="hidden" name="img" value="{{item['img']}}">
+            <button type="submit" class="btn btn-outline-warning">Favorite</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% if current_page != '1' %}
+        <li class="page-item">
+            <a class="page-link"
+               href="{{all_page.get('{}'.format(int(current_page)-1))}}&current_page={{int(current_page)-1}}">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Last</span>
+            </a>
+        </li>
+        {% endif %}
+        {% for page in range (int(current_page)-3,int(current_page)) %}
+        {% if '{}'.format(page) in all_page %}
+        <li class="page-item">
+            <a class="page-link" href="{{all_page.get('{}'.format(page))}}&current_page={{page}}">{{page}}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        <li class="page-item active">
+            <a class="page-link" href="#">{{current_page}}<span class="sr-only">(current)</span></a>
+        </li>
+        {% for page in range (int(current_page),int(current_page)+8) %}
+        {% if '{}'.format(page) in all_page %}
+        <li class="page-item">
+            <a class="page-link" href="{{all_page.get('{}'.format(page))}}&current_page={{page}}">{{page}}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        <li class="page-item">
+            <a class="page-link"
+               href="{{all_page.get('{}'.format(int(current_page)+1))}}&current_page={{int(current_page)+1}}">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+{% endblock %}
